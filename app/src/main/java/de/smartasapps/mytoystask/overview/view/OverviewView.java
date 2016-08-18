@@ -13,4 +13,9 @@ public interface OverviewView extends MvpView {
     void setShownUrl(String url);
 
     void setDrawerHeader(String headerText);
+
+    void setDrawerUpNavigationVisible(boolean visible);
+
+
+
 }

@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -110,6 +111,11 @@ public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> i
     }
 
     @Override
+    public void setDrawerUpNavigationVisible(boolean visible) {
+        upNavigationButton.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
     public void itemClicked(NavigationEntry entry) {
         presenter.itemClicked(entry);
     }
@@ -117,5 +123,10 @@ public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> i
     @OnClick(R.id.clearButton)
     public void clearButtonClicked() {
         presenter.closeDrawerClicked();
+    }
+
+    @OnClick(R.id.backCarret)
+    public void backCarrotClicked() {
+        presenter.drawerNavigationUpPressed();
     }
 }

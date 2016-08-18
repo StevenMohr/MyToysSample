@@ -11,4 +11,6 @@ public interface OverviewPresenter extends MvpPresenter<OverviewView> {
     void hamburgerClicked();
     void closeDrawerClicked();
     void itemClicked(NavigationEntry entry);
+
+    void drawerNavigationUpPressed();
 }

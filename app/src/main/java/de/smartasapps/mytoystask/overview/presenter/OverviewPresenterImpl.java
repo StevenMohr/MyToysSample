@@ -27,6 +27,9 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
 
     private Subscription loadDataSub;
 
+    List<NavigationEntry> parents = new ArrayList<>(3);
+    List<NavigationEntry> rootLevel;
+
     @Inject
     NavigationEntryManager entryManager;
 
@@ -65,7 +68,9 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
                     @Override
                     public void call(List<NavigationEntry> navigationEntries) {
                         if (isViewAttached()) {
+                            rootLevel = navigationEntries;
                             getView().setElementsForDrawer(navigationEntries);
+                            getView().setDrawerUpNavigationVisible(false);
                         }
                     }
                 }, new Action1<Throwable>() {
@@ -107,9 +112,30 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
         if (entry.type == NavigationEntryType.NODE) {
             getView().setElementsForDrawer(entry.children);
             getView().setDrawerHeader(entry.label);
+            getView().setDrawerUpNavigationVisible(true);
+            parents.add(entry);
         } else {
             getView().setShownUrl(entry.url);
             getView().closeDrawer();
+        }
+    }
+
+    @Override
+    public void drawerNavigationUpPressed() {
+        if (!isViewAttached()) {
+            return;
+        }
+        if (parents.size() > 1) {
+            parents.remove(parents.size()-1);
+            NavigationEntry parent = parents.remove(parents.size()-1);
+            getView().setDrawerHeader(parent.label);
+            getView().setElementsForDrawer(parent.children);
+        }
+        else {
+            parents.clear();
+            getView().setDrawerUpNavigationVisible(false);
+            getView().setDrawerHeader("");
+            getView().setElementsForDrawer(rootLevel);
         }
     }
 }

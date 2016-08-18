@@ -20,6 +20,8 @@ import de.smartasapps.mytoystask.overview.model.NavigationEntryManager;
 import de.smartasapps.mytoystask.overview.view.OverviewView;
 import rx.Observable;
 
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -104,6 +106,14 @@ public class OverviewPresenterImplTest {
 
         verify(viewMock).setShownUrl(BuildConfig.HOMEPAGE);
         verify(navigationEntryManagerMock, Mockito.atLeastOnce()).getNavigationEntries();
+    }
+
+    @Test
+    public void drawerNavigationUpPressed() throws Exception {
+        presenter.drawerNavigationUpPressed();
+
+        verify(viewMock).setDrawerHeader(anyString());
+        verify(viewMock).setElementsForDrawer(anyListOf(NavigationEntry.class));
     }
 
 }
