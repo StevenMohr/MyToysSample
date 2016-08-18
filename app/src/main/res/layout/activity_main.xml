@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="48dp"/>
+        <WebView android:id="@+id/webView" android:layout_width="match_parent"
+                 android:layout_height="match_parent"/>
+    </LinearLayout>
+    <!-- The navigation drawer -->
+    <RelativeLayout android:layout_width="240dp" android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="@android:color/white"
+    >
+        <ImageView android:id="@+id/backCarret" android:layout_width="24dp"
+                   android:src="@drawable/ic_chevron_left_black"
+                   android:layout_height="24dp"
+                   android:layout_alignParentStart="true"/>
+        <TextView android:id="@+id/categoryText" android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" android:layout_alignParentStart="true"
+                  android:layout_alignParentTop="true" android:layout_toRightOf="@id/backCarret"
+        />
+        <ImageView android:id="@+id/clearButton" android:layout_width="24dp"
+                   android:layout_height="24dp" android:layout_alignParentEnd="true"
+                   android:layout_alignParentTop="true" android:src="@drawable/ic_clear_black"/>
+        <android.support.v7.widget.RecyclerView android:id="@+id/drawerRecyclerView"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_below="@id/clearButton"
+                                                android:choiceMode="singleChoice"
+                                                android:divider="@android:color/transparent"
+        />
+    </RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

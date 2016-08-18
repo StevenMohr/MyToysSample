@@ -1,17 +1,22 @@
 package de.smartasapps.mytoystask.overview.presenter;
 
+import android.util.Log;
+
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import de.smartasapps.mytoystask.BuildConfig;
 import de.smartasapps.mytoystask.network.NavigationEntry;
 import de.smartasapps.mytoystask.overview.model.NavigationEntryManager;
 import de.smartasapps.mytoystask.overview.view.OverviewView;
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implements OverviewPresenter {
 
@@ -26,8 +31,19 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
     OverviewPresenterImpl() {}
 
     @Override
+    public void viewInitialized() {
+        if (isViewAttached()) {
+            getView().setShownUrl(BuildConfig.HOMEPAGE);
+            loadData();
+        }
+    }
+
+    @Override
     public void loadData() {
-        loadDataSub = entryManager.getNavigationEntries().subscribe(new Action1<List<NavigationEntry>>() {
+        loadDataSub = entryManager.getNavigationEntries().
+                observeOn(AndroidSchedulers.mainThread()).
+                subscribeOn(Schedulers.io()).
+                subscribe(new Action1<List<NavigationEntry>>() {
             @Override
             public void call(List<NavigationEntry> navigationEntries) {
                 if (isViewAttached()) {
@@ -37,7 +53,7 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
         }, new Action1<Throwable>() {
             @Override
             public void call(Throwable throwable) {
-
+                Log.e("MyToysExample", "Error when trying to get navigation elements", throwable);
             }
         });
     }
@@ -45,8 +61,9 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
     @Override
     public void attachView(OverviewView view) {
         super.attachView(view);
-        loadData();
     }
+
+
 
     @Override
     public void hamburgerClicked() {
