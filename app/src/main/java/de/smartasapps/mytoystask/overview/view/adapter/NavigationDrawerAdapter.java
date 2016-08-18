@@ -16,13 +16,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.smartasapps.mytoystask.R;
 import de.smartasapps.mytoystask.network.NavigationEntry;
+import de.smartasapps.mytoystask.network.NavigationEntryType;
 
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.DrawerVH> {
 
     private List<NavigationEntry> data = Collections.emptyList();
+    private final ItemClickListener listener;
 
-    public NavigationDrawerAdapter(@NonNull List<NavigationEntry> entries) {
+    public NavigationDrawerAdapter(@NonNull List<NavigationEntry> entries, ItemClickListener listener) {
         data = entries;
+        this.listener = listener;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 holder.chevron.setVisibility(View.INVISIBLE);
                 break;
-            case LABEL:
+            case LINK:
                 holder.title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 holder.chevron.setVisibility(View.INVISIBLE);
                 break;
@@ -48,6 +51,16 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                 holder.title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 holder.chevron.setVisibility(View.VISIBLE);
                 break;
+        }
+        if (!NavigationEntryType.SECTION.equals(navigationEntry.type)) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.itemClicked(navigationEntry);
+                }
+            });
+        } else {
+            holder.itemView.setOnClickListener(null);
         }
     }
 
@@ -67,5 +80,9 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface ItemClickListener {
+        void itemClicked(NavigationEntry entry);
     }
 }

@@ -9,10 +9,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
@@ -22,13 +22,14 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.smartasapps.mytoystask.R;
 import de.smartasapps.mytoystask.di.DIProvider;
 import de.smartasapps.mytoystask.network.NavigationEntry;
 import de.smartasapps.mytoystask.overview.presenter.OverviewPresenter;
 import de.smartasapps.mytoystask.overview.view.adapter.NavigationDrawerAdapter;
 
-public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> implements OverviewView {
+public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> implements OverviewView, NavigationDrawerAdapter.ItemClickListener {
     @Inject
     OverviewPresenter overviewPresenter;
 
@@ -38,8 +39,14 @@ public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> i
     @BindView(R.id.webView)
     WebView webView;
 
+    @BindView(R.id.categoryText)
+    TextView categoryText;
+
     @BindView(R.id.drawerRecyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.backCarret)
+    ImageView upNavigationButton;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -63,6 +70,10 @@ public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> i
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setJavaScriptEnabled(true);
+
         presenter.viewInitialized();
     }
 
@@ -85,13 +96,26 @@ public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> i
 
     @Override
     public void setElementsForDrawer(List<NavigationEntry> data) {
-       recyclerView.swapAdapter(new NavigationDrawerAdapter(data), true);
+        recyclerView.swapAdapter(new NavigationDrawerAdapter(data, this), true);
     }
 
     @Override
     public void setShownUrl(String url) {
-        webView.setWebViewClient(new WebViewClient());
-        webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
+    }
+
+    @Override
+    public void setDrawerHeader(String headerText) {
+        categoryText.setText(headerText);
+    }
+
+    @Override
+    public void itemClicked(NavigationEntry entry) {
+        presenter.itemClicked(entry);
+    }
+
+    @OnClick(R.id.clearButton)
+    public void clearButtonClicked() {
+        presenter.closeDrawerClicked();
     }
 }

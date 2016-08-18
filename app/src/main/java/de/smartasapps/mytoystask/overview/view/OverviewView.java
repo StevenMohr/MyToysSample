@@ -11,4 +11,6 @@ public interface OverviewView extends MvpView {
     void closeDrawer();
     void setElementsForDrawer(List<NavigationEntry> data);
     void setShownUrl(String url);
+
+    void setDrawerHeader(String headerText);
 }
