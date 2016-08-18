@@ -3,25 +3,27 @@ package de.smartasapps.mytoystask.overview.presenter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.smartasapps.mytoystask.BuildConfig;
 import de.smartasapps.mytoystask.network.NavigationEntry;
+import de.smartasapps.mytoystask.network.NavigationEntryType;
 import de.smartasapps.mytoystask.overview.model.NavigationEntryManager;
 import de.smartasapps.mytoystask.overview.view.OverviewView;
 import rx.Observable;
 
-import static org.assertj.core.api.Fail.fail;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
 public class OverviewPresenterImplTest {
 
     @Rule
@@ -49,7 +51,7 @@ public class OverviewPresenterImplTest {
         presenter.loadData();
 
         verify(navigationEntryManagerMock, Mockito.atLeastOnce()).getNavigationEntries();
-        verify(viewMock, atLeastOnce()).setElementsForDrawer(anyListOf(NavigationEntry.class));
+        //verify(viewMock, atLeastOnce()).setElementsForDrawer(anyListOf(NavigationEntry.class));
     }
 
     @Test
@@ -69,9 +71,39 @@ public class OverviewPresenterImplTest {
     }
 
     @Test
-    public void itemClicked() throws Exception {
+    public void itemClicked_Link() throws Exception {
+        NavigationEntry testEntry = new NavigationEntry();
+        final String testUrl = "http://example.com/";
+        testEntry.url = testUrl;
+        testEntry.type = NavigationEntryType.LINK;
 
-        fail("Not implemented");
+        presenter.itemClicked(testEntry);
+
+        verify(viewMock).setShownUrl(testUrl);
+    }
+
+    @Test
+    public void itemClicked_Node() throws Exception {
+        NavigationEntry testEntry = new NavigationEntry();
+        final String label = "HiFi";
+        final List<NavigationEntry> children = new ArrayList<>();
+        children.add(new NavigationEntry());
+        testEntry.label = label;
+        testEntry.children = children;
+        testEntry.type = NavigationEntryType.NODE;
+
+        presenter.itemClicked(testEntry);
+
+        verify(viewMock).setElementsForDrawer(children);
+        verify(viewMock).setDrawerHeader(label);
+    }
+
+    @Test
+    public void viewInitialized() {
+        presenter.viewInitialized();
+
+        verify(viewMock).setShownUrl(BuildConfig.HOMEPAGE);
+        verify(navigationEntryManagerMock, Mockito.atLeastOnce()).getNavigationEntries();
     }
 
 }

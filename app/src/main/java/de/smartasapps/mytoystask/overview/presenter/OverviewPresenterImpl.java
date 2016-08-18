@@ -77,12 +77,6 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
     }
 
     @Override
-    public void attachView(OverviewView view) {
-        super.attachView(view);
-    }
-
-
-    @Override
     public void hamburgerClicked() {
         if (!isViewAttached()) {
             return;
