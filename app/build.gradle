@@ -14,7 +14,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "AUTH_HEADER", "\"x-api-key: hz7JPdKK069Ui1TRxxd1k8BQcocSVDkj219DVzzD\""
+        buildConfigField "String", "BASE_URL", "\"https://mytoysiostestcase1.herokuapp.com/api/\""
+        buildConfigField "String", "HOMEPAGE", "\"http://www.mytoys.de\""
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -33,13 +36,15 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
     compile "com.android.support:gridlayout-v7:$SUPPORT_LIB_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIB_VERSION"
     compile "com.android.support:design:$SUPPORT_LIB_VERSION"
 
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
