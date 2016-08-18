@@ -16,16 +16,14 @@ import de.smartasapps.mytoystask.overview.model.NavigationEntryManager;
 import de.smartasapps.mytoystask.overview.view.OverviewView;
 import rx.Observable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implements OverviewPresenter {
 
     private boolean drawerOpened = false;
 
-    private Subscription loadDataSub;
+    Subscription loadDataSub;  //Would be replaced with RxLifecycle in a production app
 
     List<NavigationEntry> parents = new ArrayList<>(3);
     List<NavigationEntry> rootLevel;
@@ -45,25 +43,27 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
         }
     }
 
+
     @Override
     public void loadData() {
-        loadDataSub = entryManager.getNavigationEntries().
+        if (!isViewAttached()) {
+            return;
+        }
+        loadDataSub = getView().bindObservable(entryManager.getNavigationEntries().
                 flatMap(new Func1<List<NavigationEntry>, Observable<List<NavigationEntry>>>() {
                     @Override
                     public Observable<List<NavigationEntry>> call(List<NavigationEntry> navigationEntries) {
                         List<NavigationEntry> returnList = new ArrayList<>();
                         for (NavigationEntry entry : navigationEntries) {
                             returnList.add(entry);
-                            if (entry.type == NavigationEntryType.SECTION) {
+                            if  (NavigationEntryType.SECTION.equals(entry.type)) {
                                 returnList.addAll(entry.children);
                                 entry.children = null;
                             }
                         }
                         return Observable.just(returnList);
                     }
-                }).
-                observeOn(AndroidSchedulers.mainThread()).
-                subscribeOn(Schedulers.io()).
+                })).
                 subscribe(new Action1<List<NavigationEntry>>() {
                     @Override
                     public void call(List<NavigationEntry> navigationEntries) {
@@ -126,16 +126,23 @@ public class OverviewPresenterImpl extends MvpBasePresenter<OverviewView> implem
             return;
         }
         if (parents.size() > 1) {
-            parents.remove(parents.size()-1);
-            NavigationEntry parent = parents.remove(parents.size()-1);
+            parents.remove(parents.size() - 1);
+            NavigationEntry parent = parents.remove(parents.size() - 1);
             getView().setDrawerHeader(parent.label);
             getView().setElementsForDrawer(parent.children);
-        }
-        else {
+        } else {
             parents.clear();
             getView().setDrawerUpNavigationVisible(false);
             getView().setDrawerHeader("");
             getView().setElementsForDrawer(rootLevel);
+        }
+    }
+
+    @Override
+    public void detachView(boolean retainInstance) {
+        super.detachView(retainInstance);
+        if (loadDataSub != null) {
+            loadDataSub.unsubscribe();
         }
     }
 }
