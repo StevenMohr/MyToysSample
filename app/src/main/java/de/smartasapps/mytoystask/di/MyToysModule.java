@@ -31,17 +31,6 @@ public class MyToysModule {
 
     @Singleton
     @Provides
-    MyToysApi provideMyToysApi(Gson gson) {
-        Retrofit retrofit = new Retrofit.Builder().
-                baseUrl(BuildConfig.BASE_URL).
-                addCallAdapterFactory(RxJavaCallAdapterFactory.create()).
-                addConverterFactory(GsonConverterFactory.create(gson)).
-                build();
-        return retrofit.create(MyToysApi.class);
-    }
-
-    @Singleton
-    @Provides
     Gson provideGson() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(NavigationEntryType.class, new NavigationEntryConverter());

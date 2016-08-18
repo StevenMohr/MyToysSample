@@ -33,15 +33,14 @@ def SUPPORT_LIB_VERSION = "24.2.0"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+
     compile "com.android.support:support-v4:$SUPPORT_LIB_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIB_VERSION"
     compile "com.android.support:gridlayout-v7:$SUPPORT_LIB_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIB_VERSION"
     compile "com.android.support:design:$SUPPORT_LIB_VERSION"
+
 
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
@@ -67,4 +66,27 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.7.1'
     testCompile 'org.robolectric:robolectric:3.1.2'
     testCompile 'org.mockito:mockito-core:2.0.52-beta'
+
+
+    androidTestApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile ('com.android.support.test.espresso:espresso-web:2.2.2') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'appcompat-v7'
+        exclude module: 'design'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'appcompat-v7'
+        exclude module: 'design'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }

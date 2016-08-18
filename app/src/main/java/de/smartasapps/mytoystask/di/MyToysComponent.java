@@ -5,6 +5,6 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {MyToysModule.class})
+@Component(modules = {MyToysModule.class, NetworkModule.class})
 public interface MyToysComponent extends MyToysGraph {
 }
