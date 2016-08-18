@@ -13,7 +13,7 @@ import rx.functions.Func1;
 public class NavigationEntryManager {
 
     @Inject
-    protected MyToysApi myToysApi;
+    MyToysApi myToysApi;
 
     @Inject
     NavigationEntryManager() { }

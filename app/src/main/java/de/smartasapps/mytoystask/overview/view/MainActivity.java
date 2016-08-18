@@ -138,7 +138,7 @@ public class MainActivity extends MvpActivity<OverviewView, OverviewPresenter> i
     }
 
     @OnClick(R.id.backCarret)
-    public void backCarrotClicked() {
+    public void backClicked() {
         presenter.drawerNavigationUpPressed();
     }
 }
